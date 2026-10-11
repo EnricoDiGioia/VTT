@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#14161b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Mesa VTT</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-select" viewBox="0 0 24 24"><path d="M5 3l14 7-6 1.8L10.5 19z"/></symbol>
+    <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M3 16.5L16.5 3 21 7.5 7.5 21z"/><path d="M7 12.5l2 2M10 9.5l1.5 1.5M13 6.5l2 2"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l1-4.5L16 4.5a2.1 2.1 0 013 3L8 18.5z"/><path d="M14 6.5l3 3"/></symbol>
+    <symbol id="i-fog" viewBox="0 0 24 24"><path d="M7 17h10.5a3.5 3.5 0 00.4-7A5.5 5.5 0 007.3 9 4 4 0 007 17z"/><path d="M4 21h16"/></symbol>
+    <symbol id="i-ping" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 010 11H11"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-fit" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+    <symbol id="i-dice" viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 2v20M3 7l9 5 9-5"/></symbol>
+    <symbol id="i-swords" viewBox="0 0 24 24"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2"/><path d="M14.5 6.5L18 3h3v3l-3.5 3.5M5 14l4 4M7 17l-3 3M3 19l2 2"/></symbol>
+    <symbol id="i-sheet" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14a6.5 6.5 0 013.5 6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eyeoff" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0112 5c6.5 0 10 7 10 7a17 17 0 01-3 3.9M6.6 6.6A17 17 0 002 12s3.5 7 10 7a9.7 9.7 0 005.4-1.6"/><path d="M9.9 9.9a3 3 0 004.2 4.2"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13h12l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 01-1-1V4a1 1 0 011-1h10a1 1 0 011 1v1"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-8-4.8-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 9c0 6.2-8 11-8 11z"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M6 4l10 8-10 8zM18 4v16"/></symbol>
+    <symbol id="i-wall" viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="M3 9.7h18M3 14.3h18M8 5v4.7M15 5v4.7M11.5 9.7v4.6M6 14.3V19M17 14.3V19"/></symbol>
+    <symbol id="i-copy2" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H5a2 2 0 00-2 2v9a2 2 0 002 2h3"/></symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 4v7h-7"/></symbol>
+    <symbol id="i-flip" viewBox="0 0 24 24"><path d="M12 3v18M8 7l-5 5 5 5V7zM16 7l5 5-5 5V7z"/></symbol>
+    <symbol id="i-front" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M16 8V4H4v12h4"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><rect x="4" y="4" width="12" height="12" rx="1.5"/><path d="M8 16v4h12V8h-4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ LOBBY ============ -->
+<div id="lobby" class="lobby">
+  <div class="lobby-card">
+    <div class="brand"><svg><use href="#i-dice"/></svg><h1>Mesa</h1></div>
+    <p class="muted">Mesa virtual leve para jogar com os amigos — no PC ou no celular.</p>
+
+    <!-- Sem conta: entrar / criar conta -->
+    <section id="lb-auth" class="lb-sec" hidden>
+      <div id="lb-auth-fb" hidden>
+        <button id="au-google" class="btn google" type="button"><svg viewBox="0 0 24 24"><path fill="#EA4335" stroke="none" d="M12 10.2v3.9h5.5c-.2 1.3-1.6 3.8-5.5 3.8-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.2 14.6 2.2 12 2.2 6.6 2.2 2.2 6.6 2.2 12s4.4 9.8 9.8 9.8c5.7 0 9.4-4 9.4-9.6 0-.6-.1-1.1-.2-1.6H12z"/></svg>Entrar com Google</button>
+        <div class="or"><span>ou com e-mail</span></div>
+        <div class="seg wide" id="au-tabs"><button type="button" data-m="in" class="on">Entrar</button><button type="button" data-m="up">Criar conta</button></div>
+        <label class="fld" id="au-name-f" hidden><span>Seu nome</span><input id="au-name" maxlength="24" autocomplete="nickname" placeholder="Como te chamam na mesa"></label>
+        <label class="fld"><span>E-mail</span><input id="au-email" type="email" autocomplete="email" inputmode="email"></label>
+        <label class="fld"><span>Senha</span><input id="au-pass" type="password" autocomplete="current-password" placeholder="mínimo 6 caracteres"></label>
+        <button id="au-go" class="btn primary" type="button">Entrar</button>
+        <div class="row small" style="justify-content:space-between">
+          <button id="au-forgot" class="linkbtn" type="button">Esqueci a senha</button>
+          <button id="au-guest" class="linkbtn" type="button">Entrar como convidado</button>
+        </div>
+      </div>
+      <div id="lb-auth-local" hidden>
+        <label class="fld"><span>Nome da conta</span><input id="au-local" maxlength="24" placeholder="Ex.: Enrico"></label>
+        <button id="au-local-go" class="btn primary" type="button">Entrar</button>
+        <p class="mode-note">Modo de teste: a conta é só o nome — o mesmo nome é sempre a mesma pessoa. Para simular um jogador, abra outra aba, saia da conta e entre com outro nome.</p>
+      </div>
+    </section>
+
+    <!-- Com conta: minhas mesas -->
+    <section id="lb-home" class="lb-sec" hidden>
+      <div class="me-row">
+        <span id="lb-avatar" class="av"></span>
+        <div class="grow"><b id="lb-user"></b><div id="lb-user-sub" class="small muted"></div></div>
+        <button id="lb-logout" class="btn sm ghost" type="button">Sair</button>
+      </div>
+      <div class="fld"><span>Sua cor</span><div id="lb-colors" class="swatches"></div></div>
+      <div id="lb-rooms" class="recent"></div>
+      <div class="lobby-actions">
+        <div class="join-row">
+          <input id="lb-code" maxlength="60" placeholder="Código ou link da mesa" autocapitalize="off" autocomplete="off">
+          <button id="lb-join" class="btn">Entrar</button>
+        </div>
+        <div id="lb-create-box">
+          <div class="or"><span>ou</span></div>
+          <div class="join-row">
+            <input id="lb-room" maxlength="40" placeholder="Nome da nova mesa">
+            <button id="lb-create" class="btn primary">Criar mesa</button>
+          </div>
+          <p class="small muted" style="margin:6px 0 0">Quem cria a mesa é o mestre. Quem entra pelo código ou link é jogador.</p>
+        </div>
+      </div>
+    </section>
+    <p id="lb-mode" class="mode-note"></p>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app" class="app" hidden>
+  <header class="topbar">
+    <button id="tb-room" class="room-btn" title="Sala"><span id="tb-room-name">Mesa</span></button>
+    <div id="tb-scene" class="scene-pick"></div>
+    <div id="tb-turn" class="turn-strip" hidden></div>
+    <div id="tb-presence" class="presence"></div>
+  </header>
+
+  <main id="stage" class="stage">
+    <canvas id="board"></canvas>
+    <div id="hud" class="hud" hidden></div>
+    <div id="toolopts" class="toolopts" hidden></div>
+    <div class="zoom">
+      <button data-z="in" title="Aproximar"><svg><use href="#i-plus"/></svg></button>
+      <button data-z="out" title="Afastar"><svg><use href="#i-minus"/></svg></button>
+      <button data-z="fit" title="Enquadrar mapa"><svg><use href="#i-fit"/></svg></button>
+    </div>
+    <div id="rolltoast" class="rolltoast"></div>
+  </main>
+
+  <nav id="tools" class="tools">
+    <button data-tool="select" title="Mover / selecionar (V)"><svg><use href="#i-select"/></svg><span>Mover</span></button>
+    <button data-tool="measure" title="Medir e áreas de efeito (M)"><svg><use href="#i-ruler"/></svg><span>Medir</span></button>
+    <button data-tool="draw" title="Desenho (D)"><svg><use href="#i-pen"/></svg><span>Desenho</span></button>
+    <button data-tool="fog" title="Névoa (F)" class="gm-only"><svg><use href="#i-fog"/></svg><span>Névoa</span></button>
+    <button data-tool="walls" title="Paredes e visão (W)" class="gm-only"><svg><use href="#i-wall"/></svg><span>Paredes</span></button>
+    <button data-tool="ping" title="Ping e laser (P) — toque ou arraste"><svg><use href="#i-ping"/></svg><span>Ping</span></button>
+    <button id="t-layer" class="gm-only layer-btn" title="Camada ativa"><svg><use href="#i-layers"/></svg><span id="t-layer-name">Tokens</span></button>
+    <button id="t-undo" title="Desfazer (Ctrl+Z)"><svg><use href="#i-undo"/></svg><span>Desfazer</span></button>
+    <span class="sep"></span>
+    <button id="t-panel" class="panel-toggle" title="Painel"><svg><use href="#i-chat"/></svg><span>Painel</span><b id="unread" class="badge" hidden></b></button>
+  </nav>
+
+  <aside id="side" class="side">
+    <div class="side-tabs" role="tablist">
+      <button data-tab="chat" class="on" title="Chat e dados"><svg><use href="#i-dice"/></svg><span>Chat</span></button>
+      <button data-tab="init" title="Iniciativa"><svg><use href="#i-swords"/></svg><span>Iniciativa</span></button>
+      <button data-tab="sheets" title="Fichas"><svg><use href="#i-sheet"/></svg><span>Fichas</span></button>
+      <button data-tab="library" title="Imagens e tokens"><svg><use href="#i-image"/></svg><span>Biblioteca</span></button>
+      <button data-tab="scenes" title="Cenas" class="gm-only"><svg><use href="#i-map"/></svg><span>Cenas</span></button>
+      <button data-tab="room" title="Sala"><svg><use href="#i-users"/></svg><span>Sala</span></button>
+      <button id="side-close" class="side-close" title="Fechar"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <section data-panel="chat" class="panel chat-panel on">
+      <div id="chat-log" class="chat-log"></div>
+      <div class="dice-quick" id="dice-quick"></div>
+      <form id="chat-form" class="chat-form">
+        <input id="chat-in" autocomplete="off" placeholder="Mensagem, /r 1d20+5, /w nome, /gr…" enterkeyhint="send">
+        <button class="btn primary" type="submit">Enviar</button>
+      </form>
+    </section>
+    <section data-panel="init" class="panel" id="p-init"></section>
+    <section data-panel="sheets" class="panel" id="p-sheets"></section>
+    <section data-panel="library" class="panel" id="p-library"></section>
+    <section data-panel="scenes" class="panel" id="p-scenes"></section>
+    <section data-panel="room" class="panel" id="p-room"></section>
+  </aside>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+<input id="file-in" type="file" accept="image/*" hidden multiple>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

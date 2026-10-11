@@ -1,0 +1,100 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "library": {
+          ".read": "auth != null"
+        },
+        "libraryData": {
+          "$id": {
+            ".read": "auth != null",
+            "$i": {
+              ".validate": "newData.isString() && newData.val().length < 600000"
+            }
+          }
+        }
+      }
+    },
+    "rooms": {
+      "$room": {
+        ".read": "auth != null && data.child('members').child(auth.uid).exists()",
+        "meta": {
+          ".read": "auth != null",
+          ".write": "auth != null && ((!data.exists() && auth.token.firebase.sign_in_provider !== 'anonymous' && newData.child('gms').child(auth.uid).val() === true && newData.child('owner').val() === auth.uid) || (data.exists() && (data.child('gms').child(auth.uid).val() === true || data.child('owner').val() === auth.uid) && newData.child('owner').val() === data.child('owner').val()))"
+        },
+        "members": {
+          "$uid": {
+            ".write": "auth != null && (auth.uid === $uid || root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true)"
+          }
+        },
+        "scenes": {
+          ".write": "auth != null && root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true"
+        },
+        "fog": {
+          ".write": "auth != null && root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true"
+        },
+        "tokens": {
+          ".write": "auth != null && root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true",
+          "$scene": {
+            "$tok": {
+              ".write": "auth != null && root.child('rooms').child($room).child('members').child(auth.uid).exists() && ((!data.exists() && newData.child('owner').val() === auth.uid && newData.child('layer').val() === 'token') || (data.exists() && data.child('layer').val() === 'token' && !data.child('locked').exists() && (data.child('owner').val() === auth.uid || data.child('owner').val() === '*') && (!newData.exists() || (newData.child('owner').val() === data.child('owner').val() && newData.child('layer').val() === 'token'))))"
+            }
+          }
+        },
+        "drawings": {
+          ".write": "auth != null && root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true",
+          "$scene": {
+            "$id": {
+              ".write": "auth != null && root.child('rooms').child($room).child('members').child(auth.uid).exists() && ((!data.exists() && newData.child('owner').val() === auth.uid) || (data.exists() && data.child('owner').val() === auth.uid && !newData.exists()))"
+            }
+          }
+        },
+        "chat": {
+          ".write": "auth != null && root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true",
+          "$id": {
+            ".write": "auth != null && !data.exists() && root.child('rooms').child($room).child('members').child(auth.uid).exists() && newData.child('uid').val() === auth.uid",
+            ".validate": "newData.child('ts').isNumber()"
+          }
+        },
+        "sheets": {
+          ".write": "auth != null && root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true",
+          "$id": {
+            ".write": "auth != null && root.child('rooms').child($room).child('members').child(auth.uid).exists() && ((!data.exists() && newData.child('owner').val() === auth.uid) || (data.child('owner').val() === auth.uid && (!newData.exists() || newData.child('owner').val() === auth.uid)))"
+          }
+        },
+        "initiative": {
+          ".write": "auth != null && root.child('rooms').child($room).child('members').child(auth.uid).exists()"
+        },
+        "assets": {
+          "$id": {
+            ".write": "auth != null && root.child('rooms').child($room).child('members').child(auth.uid).exists() && ((!data.exists() && newData.child('owner').val() === auth.uid) || data.child('owner').val() === auth.uid || root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true)"
+          }
+        },
+        "assetData": {
+          "$id": {
+            ".write": "auth != null && (root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true || root.child('rooms').child($room).child('assets').child($id).child('owner').val() === auth.uid)",
+            "$i": {
+              ".write": "auth != null && !data.exists() && root.child('rooms').child($room).child('members').child(auth.uid).exists()",
+              ".validate": "newData.isString() && newData.val().length < 600000"
+            }
+          }
+        },
+        "cursors": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid"
+          }
+        },
+        "pings": {
+          "$id": {
+            ".write": "auth != null && root.child('rooms').child($room).child('members').child(auth.uid).exists()"
+          }
+        },
+        "walls": {
+          ".write": "auth != null && root.child('rooms').child($room).child('meta/gms').child(auth.uid).val() === true"
+        }
+      }
+    }
+  }
+}
