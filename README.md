@@ -81,6 +81,7 @@ Alternativa: com o Firebase CLI (`npm i -g firebase-tools`), `firebase login`, `
 - Em **Sala** você copia o link de convite. O mestre pode promover outra pessoa a mestre também (Sala → Tornar mestre); o criador nunca perde o papel.
 - **Convidado** (opcional): entra sem conta, só como jogador, e perde o acesso ao trocar de aparelho.
 - **Modo local (teste)**: a conta é só um nome — o mesmo nome é sempre a mesma pessoa. Para simular um jogador, abra outra aba, toque em **Sair** e entre com outro nome.
+- **Instalar como app**: na tela inicial da Mesa aparece "⬇ Instalar o app" (Android e PC, no Chrome/Edge). No iPhone: Safari → Compartilhar → Adicionar à Tela de Início. O app abre em tela cheia, com ícone próprio, e sempre pega a versão mais nova do site.
 - No celular: um dedo arrasta o mapa ou um token, dois dedos dão zoom, segurar o dedo no mapa faz ping, tocar duas vezes num token abre o token/ficha. O botão **Painel** abre chat, iniciativa, fichas etc.
 - No PC: roda do mouse dá zoom, arrastar o fundo (ou botão direito / espaço + arrastar) move a câmera, duplo clique abre o token.
 - Atalhos: `V` mover, `M` medir, `D` desenho, `F` névoa, `W` paredes, `P` ping/laser · `Ctrl+C/X/V` copiar/recortar/colar, `Ctrl+D` duplicar, `Ctrl+A` selecionar tudo, `Ctrl+Z` desfazer, `Ctrl+Y` refazer · `R` gira 45° (Shift+R volta), `[` `]` ordem, `L` trava, `H` esconde (mestre), `Del` apaga, setas movem · `Alt` desliga o encaixe, `Esc` cancela.
@@ -103,6 +104,7 @@ Alternativa: com o Firebase CLI (`npm i -g firebase-tools`), `firebase login`, `
 
 ```
 index.html            página única (lobby + mesa)
+sw.js                 service worker (instalar como app; rede primeiro)
 css/style.css         visual (responsivo: lateral no PC, gaveta no celular)
 js/config.js          configuração do Firebase
 js/state.js           estado da sala, ações e caminhos no banco

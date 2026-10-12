@@ -14,6 +14,8 @@ import { initLibrary } from './ui/library.js';
 import { initScenes } from './ui/scenes.js';
 import { initRoom } from './ui/room.js';
 import { $, $$, h, toast, fill, initials, confirmBox, promptBox } from './ui/dom.js';
+import { initPWA, canInstall } from './pwa.js';
+import { installApp } from './ui/install.js';
 
 const params = new URLSearchParams(location.search);
 let pendingRoom = params.get('sala') || '';
@@ -160,6 +162,11 @@ async function go(kind, codeArg) {
 }
 
 async function main() {
+  initPWA();
+  const inst = $('#lb-install');
+  const showInst = () => { inst.hidden = !canInstall(); };
+  inst.addEventListener('click', installApp);
+  on('pwa', showInst); showInst();
   bindAuth();
   $('#lb-create').addEventListener('click', () => go('create'));
   $('#lb-join').addEventListener('click', () => go('join'));

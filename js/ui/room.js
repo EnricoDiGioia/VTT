@@ -2,6 +2,8 @@
 import { S, on, emit, isGM, setGM, updateMe, COLORS, R } from '../state.js';
 import { $, h, icon, toast, initials, confirmBox, fill } from './dom.js';
 import { openPanel } from './layout.js';
+import { canInstall } from '../pwa.js';
+import { installApp } from './install.js';
 
 export function inviteLink() {
   const u = new URL(location.href);
@@ -12,6 +14,7 @@ export function inviteLink() {
 export function initRoom() {
   $('#tb-room').addEventListener('click', () => openPanel('room'));
   on('members', () => { render(); presence(); });
+  on('pwa', render);
   on('meta', () => { render(); presence(); $('#tb-room-name').textContent = S.meta?.name || 'Mesa'; roleChip(); document.title = (S.meta?.name || 'Mesa') + ' · VTT'; document.body.classList.toggle('is-gm', isGM()); });
   render(); presence();
 }
@@ -69,6 +72,7 @@ function render() {
     h('h3', 'Atalhos'),
     h('div.small.muted', { style: { lineHeight: 1.7 } },
       'V mover · M medir · D desenho · F névoa · W paredes · P ping/laser · Ctrl+C/X/V copiar/colar · Ctrl+D duplicar · Ctrl+A tudo · Ctrl+Z/Y desfazer/refazer · R gira · [ ] ordem · L trava · H esconde · Del apaga · Alt desliga o encaixe · arrastar no vazio seleciona (PC) · botão direito/Espaço move o mapa · duplo clique abre token/ficha'),
+    canInstall() ? h('div.row', h('button.btn', { type: 'button', on: { click: installApp } }, '⬇ Instalar o app')) : null,
     h('div.row',
       h('button.btn.ghost', { type: 'button', on: { click: () => { location.href = location.pathname; } } }, 'Voltar às minhas mesas'),
       h('button.btn.ghost', { type: 'button', on: { click: async () => { if (await confirmBox('Sair da sua conta neste aparelho?', 'Sair', false)) emit('logout'); } } }, 'Sair da conta'),

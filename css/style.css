@@ -291,3 +291,5 @@ label.stack input, label.stack select { width: 100%; color: var(--tx); }
 @media (max-width: 480px) {
   .scene-pick .live, .scene-pick .notlive { display: none; }
 }
+.install-link { display: block; margin: 12px auto 0; color: var(--acc); font-size: 13px; }
+.install-link[hidden] { display: none; }
