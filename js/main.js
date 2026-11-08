@@ -1,7 +1,7 @@
 // Inicialização: login -> minhas mesas -> mesa.
 import {
   S, connect, createRoom, joinRoom, roomExists, updateMe, COLORS, saveMe, on,
-  login, logout, resetPassword, myRooms, forgetRoom,
+  login, logout, resetPassword, myRooms, forgetRoom, roomURL, homeURL,
 } from './state.js';
 import { initBoard } from './board.js';
 import { initLayout } from './ui/layout.js';
@@ -40,6 +40,7 @@ function enterApp() {
   $('#lobby').hidden = true;
   $('#app').hidden = false;
   const u = new URL(location.href);
+  u.searchParams.delete('inicio');
   u.searchParams.set('sala', S.roomId);
   history.replaceState(null, '', u);
 }
@@ -107,14 +108,16 @@ async function showHome() {
   $('#lb-auth').hidden = true;
   $('#lb-home').hidden = false;
   const u = S.user;
+  const froq = S.be.mode === 'froq';
   const av = $('#lb-avatar');
   av.textContent = initials(S.me.name || u.name); av.style.background = S.me.color;
   $('#lb-user').textContent = S.me.name || u.name;
-  $('#lb-user-sub').textContent = u.guest ? 'Convidado (só pode entrar em mesas)' : (u.email || (S.be.mode === 'local' ? 'conta de teste (modo local)' : ''));
+  $('#lb-user-sub').textContent = froq ? 'Conta do Froq' : u.guest ? 'Convidado (só pode entrar em mesas)' : (u.email || (S.be.mode === 'local' ? 'conta de teste (modo local)' : ''));
+  $('#lb-logout').hidden = froq;
   $('#lb-create-box').hidden = !!u.guest;
   $('#lb-mode').innerHTML = S.be.mode === 'local'
     ? '<b>Modo local</b> — funciona só entre abas deste navegador. Configure o Firebase (veja o README) para jogar online.'
-    : '';
+    : froq ? 'Escolha a mesa. Quem estiver com a Mesa aberta no Froq entra nela junto com você.' : '';
   drawColors();
   if (pendingRoom) { const r = pendingRoom; pendingRoom = ''; $('#lb-code').value = r; go('join', r); return; }
   const rooms = await myRooms();
@@ -149,7 +152,11 @@ async function go(kind, codeArg) {
     } else {
       const code = String(codeArg || $('#lb-code').value).trim().replace(/.*[?&]sala=/, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
       if (!code) { $('#lb-code').focus(); return; }
-      if (!(await roomExists(code))) { toast('Mesa não encontrada'); return; }
+      if (!(await roomExists(code))) {
+        toast('Mesa não encontrada');
+        if (S.be.mode === 'froq' && !S.be.froq.session?.starter) $('#lb-mode').textContent = 'A mesa escolhida não existe mais. Peça para quem abriu a Mesa escolher outra.';
+        return;
+      }
       initUI();
       await joinRoom(code);
       updateMe({ name: S.me.name, color: S.me.color });
@@ -161,8 +168,33 @@ async function go(kind, codeArg) {
   } finally { busy = false; }
 }
 
+// ---------- dentro do Froq (aba Atividades) ----------
+// Quem abriu a atividade escolhe a mesa; os outros vão para ela sozinhos e acompanham as trocas.
+function startInFroq() {
+  document.body.classList.add('in-froq');
+  const fr = S.be.froq;
+  let announced = '';
+  on('meta', (m) => {
+    if (!fr.session?.starter || !S.roomId || !m?.name) return;
+    const key = S.roomId + '\n' + m.name;
+    if (key !== announced) { announced = key; fr.setRoom(S.roomId, m.name); }
+  });
+  fr.onSession((s) => {
+    if (!s) return;
+    if (s.room && s.room !== S.roomId && !(s.starter && !S.roomId)) location.replace(roomURL(s.room));
+    else if (!s.room && !s.starter && S.roomId) location.replace(homeURL());
+  });
+  const s = fr.session;
+  if (s?.starter && (params.get('inicio') || !s.room)) { showHome(); return; }
+  if (s?.room) { $('#lb-mode').textContent = 'Entrando na mesa…'; go('join', s.room); return; }
+  $('#lb-auth').hidden = true;
+  $('#lb-home').hidden = true;
+  $('#lb-mode').textContent = 'Esperando quem abriu a Mesa escolher a mesa…';
+}
+
 async function main() {
-  initPWA();
+  const embedded = window.parent !== window;
+  if (!embedded) initPWA();
   const inst = $('#lb-install');
   const showInst = () => { inst.hidden = !canInstall(); };
   inst.addEventListener('click', installApp);
@@ -181,6 +213,7 @@ async function main() {
     $('#lb-mode').innerHTML = `<b>Erro ao conectar:</b> ${e.message}. Confira o firebaseConfig no js/config.js.`;
     return;
   }
+  if (S.be.mode === 'froq') { startInFroq(); return; }
   if (S.user) showHome(); else showAuth();
 }
 

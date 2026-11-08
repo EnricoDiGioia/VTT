@@ -75,6 +75,17 @@ Essas chaves podem ficar públicas no GitHub: no Firebase quem protege os dados 
 
 Alternativa: com o Firebase CLI (`npm i -g firebase-tools`), `firebase login`, `firebase init` (escolha o projeto; o `firebase.json` já está pronto) e `firebase deploy` publica o site e as regras de uma vez.
 
+## Dentro do Froq (aba Atividades)
+
+A Mesa também abre dentro do [Froq](https://froq.onrender.com), na aba **Atividades** de um canal, de uma chamada ou
+de uma conversa privada. Aberta assim (o Froq passa `?froq=<endereço do Froq>`), ela usa o backend `js/net/froq.js`:
+
+- **sem login**: quem entra é a pessoa logada no Froq;
+- **os dados ficam no servidor do Froq** (não no Firebase), com as mesmas regras do `database.rules.json`;
+- quem abriu a atividade escolhe a mesa, e todo mundo com a Mesa aberta no canal vai para ela junto.
+
+Só os endereços da lista `froqOrigins` em `js/config.js` podem abrir a Mesa nesse modo. Fora do Froq, nada muda.
+
 ## Como jogar
 
 - **Contas**: cada pessoa entra com Google ou e-mail e senha. Quem **cria a mesa** é o mestre dela para sempre (em qualquer aparelho); quem entra pelo código ou link é jogador. A tela inicial mostra **Minhas mesas** com o seu papel em cada uma.
@@ -114,6 +125,7 @@ js/dice.js            rolador de dados
 js/assets.js          compressão, envio e cache de imagens
 js/net/firebase.js    backend Firebase
 js/net/local.js       backend local (abas do mesmo navegador)
+js/net/froq.js        backend do Froq (a Mesa aberta na aba Atividades do Froq)
 js/ui/*.js            painéis: chat, iniciativa, fichas, biblioteca, cenas, sala, HUD do token
 database.rules.json   regras de segurança do Realtime Database
 ```
