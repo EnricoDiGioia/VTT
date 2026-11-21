@@ -10,3 +10,12 @@ export const firebaseConfig = {
   messagingSenderId: "701365250677",
   appId: "1:701365250677:web:cc19acb78fd4cab68ce63c",
 };
+
+// Endereços do Froq que podem abrir a Mesa dentro da aba Atividades (?froq=<endereço>).
+// Aberta por um deles, a Mesa usa o mesmo banco e as mesmas contas do navegador (Firebase); o Froq só
+// combina a sessão da atividade (quem abriu escolhe a mesa e os outros vão junto).
+export const froqOrigins = [
+  'https://froq.onrender.com',
+  'http://localhost:5173', // npm run dev do Froq
+  'http://localhost:5174', // testes de ponta a ponta do Froq
+];

@@ -1,5 +1,5 @@
 // Sala: convite, jogadores, papel de mestre, seu perfil. + avatares no topo.
-import { S, on, emit, isGM, setGM, updateMe, COLORS, R } from '../state.js';
+import { S, on, emit, isGM, setGM, updateMe, COLORS, R, homeURL } from '../state.js';
 import { $, h, icon, toast, initials, confirmBox, fill } from './dom.js';
 import { openPanel } from './layout.js';
 import { canInstall } from '../pwa.js';
@@ -41,6 +41,8 @@ function render() {
   const link = inviteLink();
   const name = h('input.grow', { value: S.me.name, maxLength: 24, on: { change: (e) => { const v = e.target.value.trim(); if (v) updateMe({ name: v }); } } });
   const colors = h('div.swatches', COLORS.map((c) => h('button.swatch', { type: 'button', class: c === S.me.color ? 'on' : '', style: { background: c }, on: { click: () => { updateMe({ color: c }); render(); } } })));
+  const froq = !!S.froq;
+  const starter = !!S.froq?.session?.starter;
   const members = Object.entries(S.members).sort((a, b) => (b[1].online ? 1 : 0) - (a[1].online ? 1 : 0) || (a[1].name || '').localeCompare(b[1].name || ''));
   fill(p, 
     h('h3', 'Convidar'),
@@ -55,6 +57,7 @@ function render() {
         } } }, icon('copy'), 'Copiar link'),
         S.be.mode === 'local' ? h('span.small.muted', 'Modo local: só funciona em abas deste navegador.') : null,
       ),
+      froq ? h('div.small.muted', 'Quem está com a Mesa aberta no Froq já entra aqui. Quem está fora do Froq entra pelo link ou pelo código, no navegador: é a mesma mesa.') : null,
     ),
     h('h3', 'Você', h('span.role-chip', { class: gm ? 'gm' : 'pl' }, gm ? (S.meta?.owner === S.uid ? 'Mestre (criador)' : 'Mestre') : 'Jogador')),
     h('div.small.muted', S.user?.guest ? 'Convidado' : `Conta: ${S.user?.email || S.user?.name || ''}`),
@@ -72,9 +75,9 @@ function render() {
     h('h3', 'Atalhos'),
     h('div.small.muted', { style: { lineHeight: 1.7 } },
       'V mover · M medir · D desenho · F névoa · W paredes · P ping/laser · Ctrl+C/X/V copiar/colar · Ctrl+D duplicar · Ctrl+A tudo · Ctrl+Z/Y desfazer/refazer · R gira · [ ] ordem · L trava · H esconde · Del apaga · Alt desliga o encaixe · arrastar no vazio seleciona (PC) · botão direito/Espaço move o mapa · duplo clique abre token/ficha'),
-    canInstall() ? h('div.row', h('button.btn', { type: 'button', on: { click: installApp } }, '⬇ Instalar o app')) : null,
+    canInstall() && !froq ? h('div.row', h('button.btn', { type: 'button', on: { click: installApp } }, '⬇ Instalar o app')) : null,
     h('div.row',
-      h('button.btn.ghost', { type: 'button', on: { click: () => { location.href = location.pathname; } } }, 'Voltar às minhas mesas'),
+      !froq || starter ? h('button.btn.ghost', { type: 'button', on: { click: () => { location.href = homeURL(); } } }, froq ? 'Trocar de mesa' : 'Voltar às minhas mesas') : null,
       h('button.btn.ghost', { type: 'button', on: { click: async () => { if (await confirmBox('Sair da sua conta neste aparelho?', 'Sair', false)) emit('logout'); } } }, 'Sair da conta'),
     ),
   );

@@ -61,8 +61,11 @@ export async function createFirebaseBackend(config) {
           const res = await A.signInWithPopup(auth, prov);
           user = toUser(res.user);
         } catch (e) {
+          const blocked = e?.code === 'auth/popup-blocked' || e?.code === 'auth/operation-not-supported-in-this-environment';
+          // Dentro do Froq (num iframe) não dá para redirecionar para o Google: ele não abre dentro de outra página.
+          if (blocked && window.parent !== window) throw new Error('O login com o Google não abriu aqui (o app bloqueou a janela). Entre com e-mail e senha, ou como convidado, ou abra o Froq pelo navegador.');
           // celular costuma bloquear pop-up: usa redirecionamento (a página recarrega já logada)
-          if (e?.code === 'auth/popup-blocked' || e?.code === 'auth/operation-not-supported-in-this-environment') {
+          if (blocked) {
             await A.signInWithRedirect(auth, prov);
             return new Promise(() => {});
           }
