@@ -31,6 +31,7 @@ export const S = {
   sub: {},            // sub-ferramenta por ferramenta
   me: loadMe(),
   user: null,         // conta logada { uid, name, email, guest, provider }
+  froq: null,         // aberta dentro do Froq: a ponte com a sessão da atividade (net/froq.js)
 };
 
 function loadMe() {
@@ -43,22 +44,21 @@ export { COLORS };
 
 // Endereços da própria Mesa (dentro do Froq, mantêm o ?froq= do endereço).
 export function roomURL(id) { const u = new URL(location.href); u.searchParams.delete('inicio'); u.searchParams.set('sala', id); u.hash = ''; return u.toString(); }
-export function homeURL() { const u = new URL(location.href); u.searchParams.delete('sala'); u.hash = ''; if (S.be?.mode === 'froq') u.searchParams.set('inicio', '1'); else u.search = ''; return u.toString(); }
+export function homeURL() { const u = new URL(location.href); u.searchParams.delete('sala'); u.hash = ''; if (S.froq) u.searchParams.set('inicio', '1'); else u.search = ''; return u.toString(); }
 
 export const R = (p = '') => `rooms/${S.roomId}${p ? '/' + p : ''}`;
 export const isGM = (uid = S.uid) => !!S.meta?.gms?.[uid];
 export const scene = () => (S.sceneId && S.scenes[S.sceneId]) || null;
 
 export async function connect() {
-  // Aberta pela aba Atividades do Froq: conta e dados vêm do Froq.
+  // Aberta pela aba Atividades do Froq: a sessão (quem abriu, qual mesa) vem do Froq; a conta e os dados
+  // são os mesmos do navegador.
   const froq = window.parent !== window ? await import('./net/froq.js') : null;
   const froqOrigin = froq?.froqParentOrigin(froqOrigins);
   if (froqOrigin) {
-    S.be = froq.createFroqBackend(froqOrigin);
-    const u = await S.be.init();
-    setUser(u);
-    await loadProfile(u);
-    return S.be.mode;
+    S.froq = froq.createFroqBridge(froqOrigin);
+    await S.froq.init();
+    if (!S.me.name && S.froq.user?.name) { S.me.name = S.froq.user.name; saveMe(); }
   }
   if (firebaseConfig) {
     const { createFirebaseBackend } = await import('./net/firebase.js');

@@ -12,7 +12,8 @@ export const firebaseConfig = {
 };
 
 // Endereços do Froq que podem abrir a Mesa dentro da aba Atividades (?froq=<endereço>).
-// Aberta por um deles, a Mesa usa a conta e o servidor do Froq no lugar do Firebase.
+// Aberta por um deles, a Mesa usa o mesmo banco e as mesmas contas do navegador (Firebase); o Froq só
+// combina a sessão da atividade (quem abriu escolhe a mesa e os outros vão junto).
 export const froqOrigins = [
   'https://froq.onrender.com',
   'http://localhost:5173', // npm run dev do Froq

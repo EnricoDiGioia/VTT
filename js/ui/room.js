@@ -41,15 +41,15 @@ function render() {
   const link = inviteLink();
   const name = h('input.grow', { value: S.me.name, maxLength: 24, on: { change: (e) => { const v = e.target.value.trim(); if (v) updateMe({ name: v }); } } });
   const colors = h('div.swatches', COLORS.map((c) => h('button.swatch', { type: 'button', class: c === S.me.color ? 'on' : '', style: { background: c }, on: { click: () => { updateMe({ color: c }); render(); } } })));
-  const froq = S.be.mode === 'froq';
-  const starter = !!S.be.froq?.session?.starter;
+  const froq = !!S.froq;
+  const starter = !!S.froq?.session?.starter;
   const members = Object.entries(S.members).sort((a, b) => (b[1].online ? 1 : 0) - (a[1].online ? 1 : 0) || (a[1].name || '').localeCompare(b[1].name || ''));
   fill(p, 
     h('h3', 'Convidar'),
     h('div.card',
       h('div.row', h('code.grow', { style: { fontSize: '20px', fontWeight: 800, letterSpacing: '2px', color: 'var(--acc)' } }, S.roomId)),
       h('div.row',
-        froq ? null : h('button.btn.primary', { type: 'button', on: { click: async () => {
+        h('button.btn.primary', { type: 'button', on: { click: async () => {
           try {
             if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) await navigator.share({ title: S.meta?.name, url: link });
             else { await navigator.clipboard.writeText(link); toast('Link copiado!'); }
@@ -57,7 +57,7 @@ function render() {
         } } }, icon('copy'), 'Copiar link'),
         S.be.mode === 'local' ? h('span.small.muted', 'Modo local: só funciona em abas deste navegador.') : null,
       ),
-      froq ? h('div.small.muted', 'Quem está com a Mesa aberta no Froq já entra aqui. Para alguém de fora, passe o código: Atividades → Mesa → entrar com o código.') : null,
+      froq ? h('div.small.muted', 'Quem está com a Mesa aberta no Froq já entra aqui. Quem está fora do Froq entra pelo link ou pelo código, no navegador: é a mesma mesa.') : null,
     ),
     h('h3', 'Você', h('span.role-chip', { class: gm ? 'gm' : 'pl' }, gm ? (S.meta?.owner === S.uid ? 'Mestre (criador)' : 'Mestre') : 'Jogador')),
     h('div.small.muted', S.user?.guest ? 'Convidado' : `Conta: ${S.user?.email || S.user?.name || ''}`),
@@ -78,7 +78,7 @@ function render() {
     canInstall() && !froq ? h('div.row', h('button.btn', { type: 'button', on: { click: installApp } }, '⬇ Instalar o app')) : null,
     h('div.row',
       !froq || starter ? h('button.btn.ghost', { type: 'button', on: { click: () => { location.href = homeURL(); } } }, froq ? 'Trocar de mesa' : 'Voltar às minhas mesas') : null,
-      froq ? null : h('button.btn.ghost', { type: 'button', on: { click: async () => { if (await confirmBox('Sair da sua conta neste aparelho?', 'Sair', false)) emit('logout'); } } }, 'Sair da conta'),
+      h('button.btn.ghost', { type: 'button', on: { click: async () => { if (await confirmBox('Sair da sua conta neste aparelho?', 'Sair', false)) emit('logout'); } } }, 'Sair da conta'),
     ),
   );
 }

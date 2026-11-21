@@ -78,11 +78,13 @@ Alternativa: com o Firebase CLI (`npm i -g firebase-tools`), `firebase login`, `
 ## Dentro do Froq (aba Atividades)
 
 A Mesa também abre dentro do [Froq](https://froq.onrender.com), na aba **Atividades** de um canal, de uma chamada ou
-de uma conversa privada. Aberta assim (o Froq passa `?froq=<endereço do Froq>`), ela usa o backend `js/net/froq.js`:
+de uma conversa privada. Aberta assim (o Froq passa `?froq=<endereço do Froq>`), **é a mesma Mesa do navegador**:
 
-- **sem login**: quem entra é a pessoa logada no Froq;
-- **os dados ficam no servidor do Froq** (não no Firebase), com as mesmas regras do `database.rules.json`;
-- quem abriu a atividade escolhe a mesa, e todo mundo com a Mesa aberta no canal vai para ela junto.
+- **mesmo banco e mesmas contas** (Firebase): cada um entra com a sua conta da Mesa (na primeira vez em cada
+  aparelho) e vê as mesmas mesas; quem está no Froq e quem está no navegador jogam juntos na mesma mesa;
+- quem abriu a atividade escolhe a mesa, e todo mundo com a Mesa aberta no canal vai para ela junto
+  (`js/net/froq.js` é só a ponte dessa sessão com a página do Froq);
+- no app do Froq para computador, o login com o Google pode não abrir (a janela é bloqueada): use e-mail e senha.
 
 Só os endereços da lista `froqOrigins` em `js/config.js` podem abrir a Mesa nesse modo. Fora do Froq, nada muda.
 
@@ -125,7 +127,7 @@ js/dice.js            rolador de dados
 js/assets.js          compressão, envio e cache de imagens
 js/net/firebase.js    backend Firebase
 js/net/local.js       backend local (abas do mesmo navegador)
-js/net/froq.js        backend do Froq (a Mesa aberta na aba Atividades do Froq)
+js/net/froq.js        ponte com o Froq (a sessão da atividade quando a Mesa abre na aba Atividades)
 js/ui/*.js            painéis: chat, iniciativa, fichas, biblioteca, cenas, sala, HUD do token
 database.rules.json   regras de segurança do Realtime Database
 ```
